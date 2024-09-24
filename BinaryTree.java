@@ -1,6 +1,6 @@
 
 /*
- * *** PLACE YOUR NAME / SECTION HERE ***
+ * *** Blake Doan / 002 ***
  *
  * Homework # 2 (Programming Assignment). This Java class defines a few basic
  * manipulation operations of a binary trees.
@@ -60,7 +60,6 @@ public class BinaryTree {
 
     /* 
      * Class Node
-     *
      * The node object definition for each node of the bin ary tree.
      */
 
@@ -200,7 +199,7 @@ public class BinaryTree {
      * YOUR NAME AND SECTION NUMBER AT THE TOP OF THE FILE.
      *
      * YOU ARE TO WRITE THE METHODS:
-     *    - replaceValue
+     *    - replaceValue ++
      *    - findMin
      *    - NodesGT
      *    - average
@@ -213,7 +212,18 @@ public class BinaryTree {
      *
      * This method will traverse the tree using a depth first search
      * approach, and for each node found with the value of 'oldVal',
-     * replace it (update teh value in place), with the provided 'newVal'.
+     * replace it (update the value in place), with the provided 'newVal'.
+     *
+     * Depth first search of the tree is based on recursion. This will result
+     * in very few lines of code.
+     *
+     */
+    /*
+     * private method replaceValueHelper
+     *
+     * This method will traverse the tree using a depth first search
+     * approach, and for each node found with the value of 'oldVal',
+     * replace it (update the value in place), with the provided 'newVal'.
      *
      * Depth first search of the tree is based on recursion. This will result
      * in very few lines of code.
@@ -224,9 +234,17 @@ public class BinaryTree {
 
         // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
         // BINARY TREE (WHICH IS BASED ON RECURSION)
+        if (node == null) {
+            return;
+        }
+        if (node.data == oldVal) {
+            node.data = newVal;
+        }
 
+        //recursive subtree
+        replaceValueHelper(node.left, oldVal, newVal);
+        replaceValueHelper(node.right, oldVal, newVal);
     }
-
 
     /*
      * private method findMinHelper()
@@ -246,8 +264,18 @@ public class BinaryTree {
 
         // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
         // BINARY TREE (WHICH IS BASED ON RECURSION)
+        int leftMin;
+        int rightMin;
 
-        return Integer.MAX_VALUE;
+        if (node == null) {
+            return Integer.MAX_VALUE;
+        } else {
+            //Recursion, call the method to read the left and right subtrees
+            leftMin = findMinHelper(node.left);
+            rightMin = findMinHelper(node.right);
+            return Math.min(node.data, Math.min(leftMin, rightMin));
+        }
+
     }
 
 
@@ -269,10 +297,22 @@ public class BinaryTree {
         // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
         // BINARY TREE (WHICH IS BASED ON RECURSION)
 
-        // return -1; // RECALL, IF TREE IS EMPTY, RETURN -1
 
+        //if the tree is empty, return 0
+        if (node == null) {
+            return 0;
+        }
 
-        return -1;
+        int count = 0;
+        if (node.data > val) {
+            count++;
+        }
+        //add to count the left and right subtrees
+        count += nodesGTHelper(node.left,val);
+        count += nodesGTHelper(node.right,val);
+
+        return count;
+
     }
 
 
@@ -311,6 +351,21 @@ public class BinaryTree {
         // COUNT LOCATIONS IN THE RETURNED ARRAY AS SHOWN BELOW, ELSE
         // THE 'SUM' IS RETURNED IN INDEX LOCATION 0, AND COUNT IS LOCATION 1
 
-        return new int[]{0, 0};
+        if (n == null){
+            return new int[]{0,0};
+        }
+
+        //recursive action, call for the left and right subtree
+        int [] leftSubTree = averageHelper(n.left);
+        int [] rightSubTree = averageHelper(n.right);
+
+        int sum = 0;
+        int count = 0;
+        
+        //add up values and count the number of nodes including the root node;
+        sum = leftSubTree[0] + rightSubTree[0] + n.data;
+        count = leftSubTree[1] + rightSubTree[1] + 1;
+
+        return new int[]{sum, count};
     }
 }
